@@ -10,7 +10,7 @@ import UIKit
 
 class SourcesViewController: UITableViewController {
     
-    var marios = [[String : String]]()
+    var amiibo = [[String : String]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,12 +27,12 @@ class SourcesViewController: UITableViewController {
     }
     
     func parse(json: JSON) {
-        for result in json["marios"].arrayValue {
+        for result in json["amiibo"].arrayValue {
             let name = result["name"].stringValue
             //let image = result["image"].stringValue
             let amiiboSeries = result["amiiboSeries"].stringValue
             let mario = ["name": name, "amiiboSeries": amiiboSeries]
-            marios.append(mario)
+            amiibo.append(mario)
         }
         tableView.reloadData()
     }
@@ -41,6 +41,18 @@ class SourcesViewController: UITableViewController {
         let alert = UIAlertController(title: "Loading Error", message: "There was a problem loading the marios.", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return amiibo.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let mario = amiibo[indexPath.row]
+        cell.textLabel?.text = mario["name"]
+        cell.detailTextLabel?.text =  mario["amiiboSeries"]
+        return cell
     }
     
 }
