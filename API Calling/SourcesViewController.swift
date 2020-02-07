@@ -9,15 +9,39 @@
 import UIKit
 
 class SourcesViewController: UITableViewController {
-
-    var sources = [[String : String]]()
+    
+    var marios = [[String : String]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Important Hogwarts Students"
-        let query = "http://hp-api.herokuapp.com/api/characters/students"
+        self.title = "Different Marios"
+        let query = "https://www.amiiboapi.com/api/amiibo/?character=mario"
+        if let url = URL(string: query) {
+            if let data = try? Data(contentsOf: url) {
+                let json = try! JSON(data: data)
+                parse(json: json)
+                return
+            }
+        }
+        loadError()
     }
-
-
+    
+    func parse(json: JSON) {
+        for result in json["marios"].arrayValue {
+            let name = result["name"].stringValue
+            //let image = result["image"].stringValue
+            let amiiboSeries = result["amiiboSeries"].stringValue
+            let mario = ["name": name, "amiiboSeries": amiiboSeries]
+            marios.append(mario)
+        }
+        tableView.reloadData()
+    }
+    
+    func loadError () {
+        let alert = UIAlertController(title: "Loading Error", message: "There was a problem loading the marios.", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
 }
 
