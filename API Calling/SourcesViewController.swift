@@ -16,14 +16,17 @@ class SourcesViewController: UITableViewController {
         super.viewDidLoad()
         self.title = "Different Marios"
         let query = "https://www.amiiboapi.com/api/amiibo/?character=mario"
-        if let url = URL(string: query) {
-            if let data = try? Data(contentsOf: url) {
-                let json = try! JSON(data: data)
-                parse(json: json)
-                return
+        DispatchQueue.global(qos: .userInitiated).async {
+            [unowned self] in
+            if let url = URL(string: query) {
+                if let data = try? Data(contentsOf: url) {
+                    let json = try! JSON(data: data)
+                    self.parse(json: json)
+                    return
+                }
             }
+            self.loadError()
         }
-        loadError()
     }
     
     func parse(json: JSON) {
@@ -34,13 +37,19 @@ class SourcesViewController: UITableViewController {
             let mario = ["name": name, "amiiboSeries": amiiboSeries]
             amiibo.append(mario)
         }
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            [unowned self] in
+            self.tableView.reloadData()
+        }
     }
     
     func loadError () {
-        let alert = UIAlertController(title: "Loading Error", message: "There was a problem loading the marios.", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            [unowned self] in
+            let alert = UIAlertController(title: "Loading Error", message: "There was a problem loading the marios.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
