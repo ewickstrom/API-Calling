@@ -45,7 +45,13 @@
                             <outlet property="delegate" destination="aSF-Ci-YgS" id="lgf-UM-uLK"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="nzN-Bw-M4K"/>
+                    <navigationItem key="navigationItem" id="nzN-Bw-M4K">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="9f0-oy-w2A">
+                            <connections>
+                                <action selector="onTappedDoneButton:" destination="aSF-Ci-YgS" id="jWJ-qJ-AmE"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sIk-RR-AfK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

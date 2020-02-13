@@ -32,9 +32,9 @@ class SourcesViewController: UITableViewController {
     func parse(json: JSON) {
         for result in json["amiibo"].arrayValue {
             let name = result["name"].stringValue
-            //let image = result["image"].stringValue
+            let url = result["image"].stringValue
             let amiiboSeries = result["amiiboSeries"].stringValue
-            let mario = ["name": name, "amiiboSeries": amiiboSeries]
+            let mario = ["name": name, "amiiboSeries": amiiboSeries, "url": url]
             amiibo.append(mario)
         }
         DispatchQueue.main.async {
@@ -63,6 +63,17 @@ class SourcesViewController: UITableViewController {
         cell.detailTextLabel?.text =  mario["amiiboSeries"]
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let url = URL(string: amiibo[indexPath.row]["url"]!)
+        UIApplication.shared.open(url! as URL, options: [:], completionHandler: nil)
+    }
+    
+    @IBAction func onTappedDoneButton(_ sender: Any) {
+        exit(0)
+    }
+    
+    
     
 }
 
